@@ -26,6 +26,8 @@ def buscar_youtube(query):
 def descargar_audio(url, nombre_archivo):
     ydl_opts = {
         "format": "bestaudio",
+        #solo agregarr esta linea si eres YO y estas en windows jajaj :v
+        #'ffmpeg_location': r"C:\ffmpeg\ffmpeg-2025-11-27-git-61b034a47c-full_build\bin",
         "outtmpl": "descargas/%(title)s.%(ext)s",
         "postprocessors": [
             {  
