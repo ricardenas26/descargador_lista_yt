@@ -4,28 +4,29 @@ warnings.filterwarnings("ignore")
 
 
 def buscar_youtube(query):
-    if(query == ""):
-        return None
-
-    ydl_opts = {
-        "default_search": "ytsearch1",   # buscar y devolver 1 resultado
-        "no_warnings": True,
-        "quiet": True
-    }
-
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(query, download=False)
-
-        if "entries" not in info or len(info["entries"]) == 0:
+    try:
+        if(query == ""):
             return None
-        return info["entries"][0]["webpage_url"]
+
+        ydl_opts = {
+            "default_search": "ytsearch1",
+            "quiet": True,
+            "no_warnings": True,
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(query, download=False)
+
+            if "entries" not in info or len(info["entries"]) == 0:
+                return None
+            return info["entries"][0]["webpage_url"]
+    except Exception:  
+        return None
 
 def descargar_audio(url, nombre_archivo):
     ydl_opts = {
-        'ffmpeg_location': r"C:\ffmpeg\ffmpeg-2025-11-27-git-61b034a47c-full_build\bin",
-        "no_warnings": True,
-        "format": "bestaudio/best",  # Elige el mejor audio disponible
-        "outtmpl": "descargas/"+nombre_archivo,   # Nombre del archivo de salida
+        "format": "bestaudio",
+        "outtmpl": "descargas/%(title)s.%(ext)s",
         "postprocessors": [
             {  
                 "key": "FFmpegExtractAudio",   # Convertir a audio
@@ -33,7 +34,8 @@ def descargar_audio(url, nombre_archivo):
                 "preferredquality": "192",     # Calidad (192 kbps es estándar)
             }
         ],
-        "quiet": False  # Ponlo en True si no quieres que imprima nada
+        "quiet": True,  # Ponlo en True si no quieres que imprima nada
+        "no_warnings": True
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -63,4 +65,4 @@ def descargar_lista(nombre_archivo):
     with open(nombre_archivo, "w") as f:
         f.writelines(nuevas_lineas)
 
-descargar_lista("lista_canciones.txt")
+descargar_lista("lista_canciones5")
